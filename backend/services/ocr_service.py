@@ -1,15 +1,25 @@
-import cv2
 import pytesseract
-import numpy as np
+from PIL import Image
+import os
 
-def extract_text(image_bytes: bytes) -> str:
-    nparr = np.frombuffer(image_bytes, np.uint8)
-    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    if image is None:
-        raise ValueError("Invalid image file")
+def extract_text_from_image(image_path: str) -> str:
+    """
+    Extract raw text from prescription image using Tesseract OCR.
+    """
 
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    text = pytesseract.image_to_string(gray)
+    if not os.path.exists(image_path):
+        raise FileNotFoundError(f"Image not found at path: {image_path}")
 
-    return text.strip()
+    try:
+        image = Image.open(image_path)
+
+        # Convert to RGB to avoid format issues
+        image = image.convert("RGB")
+
+        text = pytesseract.image_to_string(image)
+
+        return text.strip()
+
+    except Exception as e:
+        raise RuntimeError(f"OCR processing failed: {str(e)}")
