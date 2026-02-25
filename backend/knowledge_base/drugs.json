@@ -1,23 +1,48 @@
 {
   "generics": {
-    "paracetamol": {
-      "class": "analgesic",
-      "risk_level": 1
-    },
-    "ibuprofen": {
-      "class": "nsaid",
-      "risk_level": 2
-    },
-    "warfarin": {
-      "class": "anticoagulant",
-      "risk_level": 3
-    }
+    "paracetamol": { "class": "analgesic", "risk_level": 1 },
+    "ibuprofen": { "class": "nsaid", "risk_level": 2 },
+    "aspirin": { "class": "antiplatelet", "risk_level": 2 },
+    "warfarin": { "class": "anticoagulant", "risk_level": 3 },
+    "clopidogrel": { "class": "antiplatelet", "risk_level": 2 },
+    "amoxicillin": { "class": "antibiotic", "risk_level": 1 },
+    "azithromycin": { "class": "antibiotic", "risk_level": 1 },
+    "metformin": { "class": "antidiabetic", "risk_level": 2 },
+    "insulin": { "class": "antidiabetic", "risk_level": 3 },
+    "morphine": { "class": "opioid", "risk_level": 3 },
+    "oxycodone": { "class": "opioid", "risk_level": 3 },
+    "codeine": { "class": "opioid", "risk_level": 2 },
+    "hydrocodone": { "class": "opioid", "risk_level": 3 },
+    "alprazolam": { "class": "benzodiazepine", "risk_level": 3 },
+    "diazepam": { "class": "benzodiazepine", "risk_level": 3 },
+    "sertraline": { "class": "ssri", "risk_level": 2 },
+    "fluoxetine": { "class": "ssri", "risk_level": 2 },
+    "atorvastatin": { "class": "statin", "risk_level": 1 },
+    "omeprazole": { "class": "ppi", "risk_level": 1 },
+    "pantoprazole": { "class": "ppi", "risk_level": 1 }
   },
 
   "brands": {
     "crocin 650": ["paracetamol"],
     "calpol 500": ["paracetamol"],
     "brufen 400": ["ibuprofen"],
-    "warfarin": ["warfarin"]
+    "ecosprin": ["aspirin"],
+    "warfarin": ["warfarin"],
+    "plavix": ["clopidogrel"],
+    "augmentin": ["amoxicillin"],
+    "azee": ["azithromycin"],
+    "glycomet": ["metformin"],
+    "novorapid": ["insulin"],
+    "morphine": ["morphine"],
+    "oxycodone": ["oxycodone"],
+    "codeine sulfate": ["codeine"],
+    "norco": ["paracetamol", "hydrocodone"],
+    "alprax": ["alprazolam"],
+    "valium": ["diazepam"],
+    "zoloft": ["sertraline"],
+    "prozac": ["fluoxetine"],
+    "lipitor": ["atorvastatin"],
+    "pantocid": ["pantoprazole"],
+    "omez": ["omeprazole"]
   }
 }
