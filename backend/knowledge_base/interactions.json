@@ -58,5 +58,29 @@
     "drug2": "metformin",
     "severity": "low",
     "description": "Risk of hypoglycemia may increase with combination therapy."
-  }
+  },
+  {
+  "drug1": "hydrocodone",
+  "drug2": "morphine",
+  "severity": "high",
+  "description": "Concurrent opioid use increases risk of respiratory depression."
+ },
+{
+  "drug1": "hydrocodone",
+  "drug2": "oxycodone",
+  "severity": "high",
+  "description": "Combined opioid use significantly increases sedation and respiratory depression risk."
+},
+{
+  "drug1": "hydrocodone",
+  "drug2": "codeine",
+  "severity": "moderate",
+  "description": "Additive opioid effects may increase sedation risk."
+},
+{
+  "drug1": "paracetamol",
+  "drug2": "warfarin",
+  "severity": "moderate",
+  "description": "Prolonged use may increase anticoagulant effect and bleeding risk."
+}
 ]
