@@ -3,6 +3,60 @@
     "drug1": "ibuprofen",
     "drug2": "warfarin",
     "severity": "high",
-    "description": "Increased bleeding risk"
+    "description": "Increased bleeding risk due to combined anticoagulant and NSAID effects."
+  },
+  {
+    "drug1": "aspirin",
+    "drug2": "warfarin",
+    "severity": "high",
+    "description": "Significantly increased bleeding risk."
+  },
+  {
+    "drug1": "clopidogrel",
+    "drug2": "aspirin",
+    "severity": "moderate",
+    "description": "Increased bleeding risk due to dual antiplatelet therapy."
+  },
+  {
+    "drug1": "morphine",
+    "drug2": "oxycodone",
+    "severity": "high",
+    "description": "Combined opioid use increases respiratory depression risk."
+  },
+  {
+    "drug1": "codeine",
+    "drug2": "oxycodone",
+    "severity": "moderate",
+    "description": "Additive opioid effects increase sedation risk."
+  },
+  {
+    "drug1": "hydrocodone",
+    "drug2": "alprazolam",
+    "severity": "high",
+    "description": "Combined CNS depressants increase risk of respiratory depression."
+  },
+  {
+    "drug1": "diazepam",
+    "drug2": "morphine",
+    "severity": "high",
+    "description": "Sedation and respiratory depression risk increased."
+  },
+  {
+    "drug1": "sertraline",
+    "drug2": "warfarin",
+    "severity": "moderate",
+    "description": "May increase bleeding risk due to platelet function effects."
+  },
+  {
+    "drug1": "fluoxetine",
+    "drug2": "aspirin",
+    "severity": "moderate",
+    "description": "Increased risk of gastrointestinal bleeding."
+  },
+  {
+    "drug1": "insulin",
+    "drug2": "metformin",
+    "severity": "low",
+    "description": "Risk of hypoglycemia may increase with combination therapy."
   }
 ]

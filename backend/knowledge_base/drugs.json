@@ -1,18 +1,23 @@
 {
-  "crocin 650": {
-    "generics": ["paracetamol"],
-    "class": "analgesic"
+  "generics": {
+    "paracetamol": {
+      "class": "analgesic",
+      "risk_level": 1
+    },
+    "ibuprofen": {
+      "class": "nsaid",
+      "risk_level": 2
+    },
+    "warfarin": {
+      "class": "anticoagulant",
+      "risk_level": 3
+    }
   },
-  "calpol 500": {
-    "generics": ["paracetamol"],
-    "class": "analgesic"
-  },
-  "brufen 400": {
-    "generics": ["ibuprofen"],
-    "class": "nsaid"
-  },
-  "warfarin": {
-    "generics": ["warfarin"],
-    "class": "anticoagulant"
+
+  "brands": {
+    "crocin 650": ["paracetamol"],
+    "calpol 500": ["paracetamol"],
+    "brufen 400": ["ibuprofen"],
+    "warfarin": ["warfarin"]
   }
 }
