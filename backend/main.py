@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import shutil
 import os
 
@@ -11,6 +12,13 @@ from services.explanation_engine import generate_explanations
 from services.myth_service import get_myth_explanation
 
 app = FastAPI(title="AI Prescription Safety Layer")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For demo only
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 UPLOAD_FOLDER = "temp_uploads"
 
