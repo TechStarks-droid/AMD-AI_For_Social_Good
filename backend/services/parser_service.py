@@ -2,11 +2,6 @@ import re
 
 
 def extract_medicines(raw_text: str):
-    """
-    Extract normalized medicine names from raw OCR text.
-    Focuses on lines containing 'Rx:'.
-    """
-
     medicines = []
 
     lines = raw_text.split("\n")
@@ -19,35 +14,31 @@ def extract_medicines(raw_text: str):
 
         lower_line = line_clean.lower()
 
-        # Check if line contains 'Rx:'
         if "rx:" in lower_line:
-            # Split on 'Rx:' to isolate medicine part
             parts = re.split(r"rx:", line_clean, flags=re.IGNORECASE)
 
             if len(parts) > 1:
                 medicine_part = parts[1].strip()
 
-                # Remove trailing noise like Start Date, SIG, pipes, etc.
                 medicine_name = re.split(
                     r"start date|sig:|\|",
                     medicine_part,
                     flags=re.IGNORECASE
                 )[0].strip()
 
-                # Remove dosage numbers (anything after first digit)
+                # REMOVE DOSAGE NUMBERS
                 medicine_name = re.split(r"\d", medicine_name)[0].strip()
 
-                # Remove common formulation words
+                # REMOVE FORMULATION WORDS
                 medicine_name = re.split(
                     r"oral|tablet|capsule|extended|release",
                     medicine_name,
                     flags=re.IGNORECASE
                 )[0].strip()
 
-                # Final cleanup
                 medicine_name = medicine_name.lower().strip()
 
-                if medicine_name:
+                if medicine_name and medicine_name not in [m["brand"] for m in medicines]:
                     medicines.append({
                         "brand": medicine_name,
                         "dosage": None,
