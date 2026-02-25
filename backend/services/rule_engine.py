@@ -71,8 +71,21 @@ def calculate_risk(interactions, duplicates):
 
     score += len(duplicates) * 20
 
+    final_score = min(score, 100)
+
+    # Risk Level Interpretation
+    if final_score >= 80:
+        level = "Critical"
+    elif final_score >= 50:
+        level = "High"
+    elif final_score >= 20:
+        level = "Moderate"
+    else:
+        level = "Low"
+
     return {
-        "risk_score": min(score, 100),
+        "risk_score": final_score,
+        "risk_level": level,
         "severity_breakdown": {
             "high": high,
             "moderate": moderate,
