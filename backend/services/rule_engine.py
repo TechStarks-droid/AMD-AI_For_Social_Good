@@ -57,13 +57,15 @@ def calculate_risk(interactions, duplicates):
     low = 0
 
     for i in interactions:
-        if i["severity"] == "high":
+        severity = i["severity"].lower()
+
+        if severity == "high":
             score += 30
             high += 1
-        elif i["severity"] == "moderate":
+        elif severity == "moderate":
             score += 15
             moderate += 1
-        else:
+        elif severity == "low":
             score += 5
             low += 1
 
