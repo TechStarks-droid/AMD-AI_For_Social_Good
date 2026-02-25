@@ -1,49 +1,55 @@
 from fastapi import FastAPI, UploadFile, File
-from services.ocr_service import extract_text_from_image as extract_text
-from services.parser_service import extract_medicines as parse_medicines
+from fastapi.responses import JSONResponse
+import shutil
 import os
 
-# CREATE APP FIRST
+from services.ocr_service import extract_text_from_image
+from services.parser_service import extract_medicines
+from services.mapping_service import map_brands_to_generics
+from services.rule_engine import detect_duplicates, check_interactions, calculate_risk
+from services.explanation_engine import generate_explanations
+from services.myth_service import get_myth_explanation
+
 app = FastAPI(title="AI Prescription Safety Layer")
 
+UPLOAD_FOLDER = "temp_uploads"
 
-@app.get("/")
-def root():
-    return {"message": "Backend is running successfully"}
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
 
 @app.post("/analyze")
-async def analyze(file: UploadFile = File(...)):
+async def analyze_prescription(file: UploadFile = File(...)):
     try:
-        temp_file_path = f"temp_{file.filename}"
+        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
 
-        # Save uploaded file
-        with open(temp_file_path, "wb") as buffer:
-            contents = await file.read()
-            buffer.write(contents)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
 
-        # Run OCR
-        raw_text = extract_text(temp_file_path)
+        raw_text = extract_text_from_image(file_path)
+        parsed = extract_medicines(raw_text)
+        mapped = map_brands_to_generics(parsed)
 
-        # Delete temp file
-        os.remove(temp_file_path)
+        duplicates = detect_duplicates(mapped)
+        interactions = check_interactions(mapped)
+        risk = calculate_risk(interactions, duplicates)
+        explanations = generate_explanations(interactions)
 
-        if not raw_text:
-            return {
-                "status": "error",
-                "message": "No text detected in image"
-            }
-
-        parsed_data = parse_medicines(raw_text)
-
-        return {
-            "status": "success",
-            "raw_text": raw_text,
-            "parsed_data": parsed_data
-        }
+        return JSONResponse(content={
+            "medicines": mapped,
+            "duplicates": duplicates,
+            "interactions": interactions,
+            "risk": risk,
+            "explanations": explanations
+        })
 
     except Exception as e:
-        return {
-            "status": "error",
-            "message": str(e)
-        }
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e)}
+        )
+
+
+@app.get("/myth")
+def myth_example():
+    return get_myth_explanation("opioids are safe if prescribed")
