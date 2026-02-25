@@ -1,0 +1,8 @@
+[
+  {
+    "drug1": "ibuprofen",
+    "drug2": "warfarin",
+    "severity": "high",
+    "description": "Increased bleeding risk"
+  }
+]
