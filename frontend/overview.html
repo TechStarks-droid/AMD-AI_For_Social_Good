@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>System Overview</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="navbar">
+    <a href="index.html">Home</a>
+    <a href="analyze.html">Analyze</a>
+    <a href="overview.html">System Overview</a>
+</div>
+
+<div class="container">
+    <h1>System Overview</h1>
+    <div class="subtitle">
+        Architecture of the Prescription Safety Engine
+    </div>
+
+    <div class="card">
+        <h3>Processing Flow</h3>
+        <p>
+            Prescription Image → OCR Extraction → Structured Parsing →
+            Brand-to-Generic Mapping → Duplicate Detection →
+            Interaction Detection → Risk Scoring → Explanation Layer
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>Core Characteristics</h3>
+        <p>
+            The safety engine is deterministic and rule-based.
+            All interaction detection and risk scoring operate
+            independently of external APIs.
+        </p>
+        <p>
+            The language model component is strictly limited to
+            explanation simplification and includes a fallback
+            mechanism for reliability.
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>Scope Limitations</h3>
+        <p>
+            This prototype supports printed prescriptions only.
+            It does not provide medical diagnosis or treatment advice.
+            The knowledge base is curated and limited in scope.
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

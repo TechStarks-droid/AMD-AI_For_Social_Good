@@ -1,108 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Prescription Safety Analyzer</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
-
-        button {
-            padding: 8px 16px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-
-        .risk {
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .high { color: red; }
-        .moderate { color: orange; }
-        .low { color: green; }
-        .critical { color: darkred; }
-    </style>
+    <title>AI Prescription Safety Layer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>AI Prescription Safety Layer</h2>
+<div class="navbar">
+    <a href="index.html">Home</a>
+    <a href="analyze.html">Analyze</a>
+    <a href="overview.html">System Overview</a>
+</div>
 
-<input type="file" id="imageInput" />
-<br>
-<button onclick="analyze()">Analyze Prescription</button>
+<div class="container">
+    <h1>AI Prescription Safety Layer</h1>
+    <div class="subtitle">
+        Structured prescription risk detection for printed prescriptions.
+    </div>
 
-<div id="output"></div>
+    <p>
+        Medication errors and drug–drug interactions remain a major safety concern,
+        especially when multiple medications are prescribed together.
+    </p>
 
-<script>
-async function analyze() {
-    const fileInput = document.getElementById("imageInput");
-    const file = fileInput.files[0];
+    <p>
+        This system analyzes printed prescriptions and identifies duplicate
+        compositions, interaction risks, and overall safety severity using
+        a deterministic rule-based engine.
+    </p>
 
-    if (!file) {
-        alert("Please upload an image first.");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-        const response = await fetch("http://127.0.0.1:8000/analyze", {
-            method: "POST",
-            body: formData
-        });
-
-        const data = await response.json();
-        displayResult(data);
-    } catch (error) {
-        alert("Error connecting to backend.");
-        console.error(error);
-    }
-}
-
-function displayResult(data) {
-    const output = document.getElementById("output");
-    output.innerHTML = "";
-
-    // Risk
-    const riskDiv = document.createElement("div");
-    riskDiv.className = "risk " + data.risk.risk_level.toLowerCase();
-    riskDiv.innerText =
-        "Risk Score: " +
-        data.risk.risk_score +
-        " (" +
-        data.risk.risk_level +
-        ")";
-    output.appendChild(riskDiv);
-
-    // Medicines
-    const medsTitle = document.createElement("h3");
-    medsTitle.innerText = "Medicines";
-    output.appendChild(medsTitle);
-
-    data.medicines.forEach(med => {
-        const p = document.createElement("p");
-        p.innerText = med.brand + " → " + med.generics.join(", ");
-        output.appendChild(p);
-    });
-
-    // Interactions
-    if (data.explanations && data.explanations.length > 0) {
-        const interTitle = document.createElement("h3");
-        interTitle.innerText = "Interactions";
-        output.appendChild(interTitle);
-
-        data.explanations.forEach(exp => {
-            const p = document.createElement("p");
-            p.innerText = exp.simple_explanation;
-            output.appendChild(p);
-        });
-    }
-}
-</script>
+    <br>
+    <a href="analyze.html">
+        <button>Start Analysis</button>
+    </a>
+</div>
 
 </body>
 </html>
