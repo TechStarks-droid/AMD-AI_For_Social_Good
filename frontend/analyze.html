@@ -6,12 +6,6 @@
 </head>
 <body>
 
-<div class="navbar">
-    <a href="index.html">Home</a>
-    <a href="analyze.html">Analyze</a>
-    <a href="overview.html">System Overview</a>
-</div>
-
 <div class="container">
     <h1>Prescription Analyzer</h1>
     <div class="subtitle">
@@ -23,15 +17,14 @@
     <button onclick="analyze()">Analyze Prescription</button>
 
     <div id="loading"></div>
-    <div id="output"></div>
 </div>
 
 <script>
 async function analyze() {
+
     const fileInput = document.getElementById("imageInput");
     const file = fileInput.files[0];
     const loading = document.getElementById("loading");
-    const output = document.getElementById("output");
 
     if (!file) {
         alert("Please upload an image first.");
@@ -39,7 +32,6 @@ async function analyze() {
     }
 
     loading.innerText = "Analyzing prescription...";
-    output.innerHTML = "";
 
     const formData = new FormData();
     formData.append("file", file);
@@ -51,55 +43,12 @@ async function analyze() {
         });
 
         const data = await response.json();
-        loading.innerText = "";
-        displayResult(data);
+        localStorage.setItem("analysisResult", JSON.stringify(data));
+        window.location.href = "result.html";
 
     } catch (error) {
         loading.innerText = "Error connecting to backend.";
         console.error(error);
-    }
-}
-
-function displayResult(data) {
-    const output = document.getElementById("output");
-
-    const riskDiv = document.createElement("div");
-    riskDiv.className = "risk-banner " + data.risk.risk_level.toLowerCase();
-    riskDiv.innerText =
-        "Risk Score: " +
-        data.risk.risk_score +
-        " — " +
-        data.risk.risk_level;
-    output.appendChild(riskDiv);
-
-    const medCard = document.createElement("div");
-    medCard.className = "card";
-    medCard.innerHTML = "<h3>Medicines Identified</h3>";
-
-    data.medicines.forEach(med => {
-        medCard.innerHTML +=
-            "<p><strong>" + med.brand +
-            "</strong> → " + med.generics.join(", ") + "</p>";
-    });
-
-    output.appendChild(medCard);
-
-    if (data.explanations && data.explanations.length > 0) {
-
-        const interactionCard = document.createElement("div");
-        interactionCard.className = "card";
-        interactionCard.innerHTML = "<h3>Safety Warnings</h3>";
-
-        const unique = [...new Set(
-            data.explanations.map(e => e.simple_explanation)
-        )];
-
-        unique.forEach(text => {
-            interactionCard.innerHTML +=
-                "<div class='interaction'>" + text + "</div>";
-        });
-
-        output.appendChild(interactionCard);
     }
 }
 </script>

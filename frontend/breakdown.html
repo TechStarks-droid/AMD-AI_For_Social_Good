@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interaction Breakdown</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Interaction Summary</h2>
+    <div id="summary"></div>
+
+    <div class="nav-buttons">
+        <button onclick="goOverview()">Back to Risk Overview</button>
+        <button onclick="goDetails()">View Medicines & Warnings</button>
+    </div>
+</div>
+
+<script>
+const data = JSON.parse(localStorage.getItem("analysisResult"));
+
+if (!data || !data.interaction_summary) {
+    document.getElementById("summary").innerHTML = "No interaction data available.";
+} else {
+
+    const summaryDiv = document.getElementById("summary");
+
+    Object.keys(data.interaction_summary).forEach(category => {
+
+        const block = document.createElement("div");
+        block.className = "card";
+
+        const catData = data.interaction_summary[category];
+
+        block.innerHTML =
+            "<h3>" + category.replace("_"," ") + "</h3>" +
+            "<p>Total Interactions: " + catData.total_interactions + "</p>" +
+            "<p>Contribution: " + catData.total_contribution + " points</p>";
+
+        summaryDiv.appendChild(block);
+    });
+}
+
+function goOverview() {
+    window.location.href = "result.html";
+}
+
+function goDetails() {
+    window.location.href = "details.html";
+}
+</script>
+
+</body>
+</html>
+</html>

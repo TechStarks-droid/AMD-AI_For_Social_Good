@@ -77,3 +77,63 @@ button:hover {
     border-left: 5px solid #dc2626;
     border-radius: 4px;
 }
+
+.risk-card {
+    margin-top: 20px;
+    padding: 25px;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    border-left: 8px solid #ccc;
+}
+
+.risk-card h2 {
+    margin: 0;
+    font-size: 26px;
+}
+
+.risk-score {
+    font-size: 42px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.risk-description {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Risk level colors */
+
+.risk-card.low {
+    border-left-color: #2ecc71;
+}
+
+.risk-card.moderate {
+    border-left-color: #ff9f43;
+}
+
+.risk-card.high {
+    border-left-color: #e67e22;
+}
+
+.risk-card.critical {
+    border-left-color: #e74c3c;
+}
+
+.navbar {
+    background: #1f2937;
+    padding: 12px;
+}
+
+.navbar a {
+    color: white;
+    margin-right: 20px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}

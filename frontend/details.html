@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medicines & Warnings</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Medicines Identified</h2>
+    <div id="medicines"></div>
+
+    <h2>Safety Warnings</h2>
+    <div id="warnings"></div>
+
+    <div class="nav-buttons">
+        <button onclick="goOverview()">Back to Risk Overview</button>
+        <button onclick="goBreakdown()">Back to Breakdown</button>
+    </div>
+</div>
+
+<script>
+const data = JSON.parse(localStorage.getItem("analysisResult"));
+
+if (!data) {
+    document.body.innerHTML = "No analysis found.";
+} else {
+
+    const medDiv = document.getElementById("medicines");
+    const warnDiv = document.getElementById("warnings");
+
+    data.medicines.forEach(med => {
+        medDiv.innerHTML +=
+            "<p><strong>" + med.brand +
+            "</strong> → " + med.generics.join(", ") + "</p>";
+    });
+
+    const unique = [...new Set(
+        data.explanations.map(e => e.simple_explanation)
+    )];
+
+    unique.forEach(text => {
+        warnDiv.innerHTML +=
+            "<div class='interaction'>" + text + "</div>";
+    });
+}
+
+function goOverview() {
+    window.location.href = "result.html";
+}
+
+function goBreakdown() {
+    window.location.href = "breakdown.html";
+}
+</script>
+
+</body>
+</html>

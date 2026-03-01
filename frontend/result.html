@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Risk Overview</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <div id="content"></div>
+
+    <div class="nav-buttons">
+        <button onclick="goBreakdown()">View Interaction Breakdown</button>
+        <button onclick="goDetails()">View Medicines & Warnings</button>
+        <button onclick="goNew()">New Analysis</button>
+    </div>
+</div>
+
+<script>
+const data = JSON.parse(localStorage.getItem("analysisResult"));
+
+if (!data) {
+    document.getElementById("content").innerHTML = "No analysis found.";
+} else {
+
+    const container = document.getElementById("content");
+
+    const riskCard = document.createElement("div");
+    riskCard.className = "risk-card " + data.risk.risk_level.toLowerCase();
+
+    riskCard.innerHTML =
+        "<h2>" + data.risk.risk_level + " Risk Detected</h2>" +
+        "<div class='risk-score'>" + data.risk.risk_score + " / 100</div>";
+
+    container.appendChild(riskCard);
+}
+
+function goBreakdown() {
+    window.location.href = "breakdown.html";
+}
+
+function goDetails() {
+    window.location.href = "details.html";
+}
+
+function goNew() {
+    window.location.href = "analyze.html";
+}
+</script>
+
+</body>
+</html>
