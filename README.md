@@ -80,9 +80,13 @@ The system does not claim clinical validation.
 Technology Stack
 ========
 Backend: FastAPI
+
 OCR: Tesseract
+
 Data: JSON-based knowledge base
+
 LLM: OpenAI API with deterministic fallback
+
 Language: Python
 
 How to Run
@@ -94,14 +98,6 @@ Ensure Tesseract is installed and available in PATH
 Run the FastAPI server
 
 Access the /analyze endpoint via Swagger UI
-
-Project Structure
-========
-backend/
-services/
-knowledge_base/
-main.py
-ARCHITECTURE.md
 
 Conclusion
 ========
