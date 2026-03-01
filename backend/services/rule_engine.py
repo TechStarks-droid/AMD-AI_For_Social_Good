@@ -34,8 +34,8 @@ def detect_duplicates(prescription):
 
 def check_interactions(prescription):
     interactions_found = []
-
     all_generics = []
+
     for med in prescription:
         all_generics.extend(med["generics"])
 
@@ -57,34 +57,33 @@ def calculate_risk(interactions, duplicates):
     low = 0
 
     for i in interactions:
-        severity = i["severity"].lower()
-
-        if severity == "high":
+        if i["severity"] == "high":
             score += 30
             high += 1
-        elif severity == "moderate":
+        elif i["severity"] == "moderate":
             score += 15
             moderate += 1
-        elif severity == "low":
+        else:
             score += 5
             low += 1
 
-    score += len(duplicates) * 20
+    duplicate_score = len(duplicates) * 20
+    score += duplicate_score
 
-    final_score = min(score, 100)
+    score = min(score, 100)
 
-    # Risk Level Interpretation
-    if final_score >= 80:
-        level = "Critical"
-    elif final_score >= 50:
-        level = "High"
-    elif final_score >= 20:
-        level = "Moderate"
-    else:
+    # Risk level classification
+    if score <= 19:
         level = "Low"
+    elif score <= 49:
+        level = "Moderate"
+    elif score <= 79:
+        level = "High"
+    else:
+        level = "Critical"
 
     return {
-        "risk_score": final_score,
+        "risk_score": score,
         "risk_level": level,
         "severity_breakdown": {
             "high": high,
@@ -92,4 +91,31 @@ def calculate_risk(interactions, duplicates):
             "low": low,
             "duplicates": len(duplicates)
         }
+    }
+
+
+def calculate_coverage(prescription):
+    total = len(prescription)
+    unknown = sum(1 for med in prescription if med.get("unknown", False))
+    recognized = total - unknown
+
+    if total == 0:
+        confidence = "none"
+    elif unknown == 0:
+        confidence = "complete"
+    elif recognized > 0:
+        confidence = "partial"
+    else:
+        confidence = "none"
+
+    return {
+        "total_medicines_detected": total,
+        "recognized_medicines": recognized,
+        "unknown_medicines": unknown,
+        "analysis_confidence": confidence,
+        "coverage_warning": (
+            "Some medicines were not found in the current knowledge base. "
+            "Risk analysis may be incomplete."
+            if unknown > 0 else None
+        )
     }
