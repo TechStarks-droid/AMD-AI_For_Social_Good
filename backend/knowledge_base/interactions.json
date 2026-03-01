@@ -3,84 +3,112 @@
     "drug1": "ibuprofen",
     "drug2": "warfarin",
     "severity": "high",
-    "description": "Increased bleeding risk due to combined anticoagulant and NSAID effects."
+    "mechanism": "Ibuprofen affects platelet function while warfarin reduces clotting ability, increasing bleeding risk.",
+    "risk_category": "bleeding",
+    "risk_weight": 30
   },
   {
     "drug1": "aspirin",
     "drug2": "warfarin",
     "severity": "high",
-    "description": "Significantly increased bleeding risk."
+    "mechanism": "Aspirin reduces platelet aggregation and warfarin reduces clotting factors, significantly increasing bleeding risk.",
+    "risk_category": "bleeding",
+    "risk_weight": 30
   },
   {
     "drug1": "clopidogrel",
     "drug2": "aspirin",
     "severity": "moderate",
-    "description": "Increased bleeding risk due to dual antiplatelet therapy."
+    "mechanism": "Both medicines reduce platelet activity, increasing bleeding tendency.",
+    "risk_category": "bleeding",
+    "risk_weight": 15
   },
   {
     "drug1": "morphine",
     "drug2": "oxycodone",
     "severity": "high",
-    "description": "Combined opioid use increases respiratory depression risk."
+    "mechanism": "Both medicines depress the central nervous system and slow breathing.",
+    "risk_category": "respiratory_depression",
+    "risk_weight": 30
   },
   {
     "drug1": "codeine",
     "drug2": "oxycodone",
     "severity": "moderate",
-    "description": "Additive opioid effects increase sedation risk."
+    "mechanism": "Additive opioid effects may increase sedation and breathing suppression.",
+    "risk_category": "sedation",
+    "risk_weight": 15
   },
   {
     "drug1": "hydrocodone",
     "drug2": "alprazolam",
     "severity": "high",
-    "description": "Combined CNS depressants increase risk of respiratory depression."
+    "mechanism": "Both medicines suppress the central nervous system, increasing risk of respiratory depression.",
+    "risk_category": "respiratory_depression",
+    "risk_weight": 30
   },
   {
     "drug1": "diazepam",
     "drug2": "morphine",
     "severity": "high",
-    "description": "Sedation and respiratory depression risk increased."
+    "mechanism": "Combined sedative effects increase risk of slowed breathing and excessive sedation.",
+    "risk_category": "respiratory_depression",
+    "risk_weight": 30
   },
   {
     "drug1": "sertraline",
     "drug2": "warfarin",
     "severity": "moderate",
-    "description": "May increase bleeding risk due to platelet function effects."
+    "mechanism": "Sertraline may affect platelet function, increasing bleeding risk when combined with warfarin.",
+    "risk_category": "bleeding",
+    "risk_weight": 15
   },
   {
     "drug1": "fluoxetine",
     "drug2": "aspirin",
     "severity": "moderate",
-    "description": "Increased risk of gastrointestinal bleeding."
+    "mechanism": "Fluoxetine may affect platelet activity, increasing gastrointestinal bleeding risk with aspirin.",
+    "risk_category": "bleeding",
+    "risk_weight": 15
   },
   {
     "drug1": "insulin",
     "drug2": "metformin",
     "severity": "low",
-    "description": "Risk of hypoglycemia may increase with combination therapy."
+    "mechanism": "Both medicines lower blood glucose, which may increase risk of hypoglycemia.",
+    "risk_category": "hypoglycemia",
+    "risk_weight": 5
   },
   {
-  "drug1": "hydrocodone",
-  "drug2": "morphine",
-  "severity": "high",
-  "description": "Concurrent opioid use increases risk of respiratory depression."
- },
-{
-  "drug1": "hydrocodone",
-  "drug2": "oxycodone",
-  "severity": "high",
-  "description": "Combined opioid use significantly increases sedation and respiratory depression risk."
-},
-{
-  "drug1": "hydrocodone",
-  "drug2": "codeine",
-  "severity": "moderate",
-  "description": "Additive opioid effects may increase sedation risk."
-},
-{
-  "drug1": "paracetamol",
-  "drug2": "warfarin",
-  "severity": "moderate",
-  "description": "Prolonged use may increase anticoagulant effect and bleeding risk."
-}
+    "drug1": "hydrocodone",
+    "drug2": "morphine",
+    "severity": "high",
+    "mechanism": "Concurrent opioid use increases risk of severe respiratory suppression.",
+    "risk_category": "respiratory_depression",
+    "risk_weight": 30
+  },
+  {
+    "drug1": "hydrocodone",
+    "drug2": "oxycodone",
+    "severity": "high",
+    "mechanism": "Combined opioid effects significantly increase sedation and breathing suppression.",
+    "risk_category": "respiratory_depression",
+    "risk_weight": 30
+  },
+  {
+    "drug1": "hydrocodone",
+    "drug2": "codeine",
+    "severity": "moderate",
+    "mechanism": "Both medicines increase central nervous system depression.",
+    "risk_category": "sedation",
+    "risk_weight": 15
+  },
+  {
+    "drug1": "paracetamol",
+    "drug2": "warfarin",
+    "severity": "moderate",
+    "mechanism": "Prolonged paracetamol use may enhance the anticoagulant effect of warfarin.",
+    "risk_category": "bleeding",
+    "risk_weight": 15
+  }
 ]

@@ -45,77 +45,89 @@ def check_interactions(prescription):
                 (rule["drug1"] == drug_a and rule["drug2"] == drug_b) or
                 (rule["drug1"] == drug_b and rule["drug2"] == drug_a)
             ):
-                interactions_found.append(rule)
+                interactions_found.append({
+                    "drug1": rule["drug1"],
+                    "drug2": rule["drug2"],
+                    "severity": rule["severity"],
+                    "mechanism": rule["mechanism"],
+                    "risk_category": rule["risk_category"],
+                    "risk_weight": rule["risk_weight"]
+                })
 
     return interactions_found
 
 
 def calculate_risk(interactions, duplicates):
-    score = 0
-    high = 0
-    moderate = 0
-    low = 0
+    raw_score = 0
 
-    for i in interactions:
-        if i["severity"] == "high":
-            score += 30
-            high += 1
-        elif i["severity"] == "moderate":
-            score += 15
-            moderate += 1
-        else:
-            score += 5
-            low += 1
+    breakdown = {
+        "interaction_contribution": 0,
+        "duplicate_contribution": 0,
+        "severity_counts": {
+            "high": 0,
+            "moderate": 0,
+            "low": 0
+        }
+    }
 
+    # Add interaction contributions
+    for interaction in interactions:
+        weight = interaction["risk_weight"]
+        raw_score += weight
+        breakdown["interaction_contribution"] += weight
+        breakdown["severity_counts"][interaction["severity"]] += 1
+
+    # Add duplicate contribution
     duplicate_score = len(duplicates) * 20
-    score += duplicate_score
+    raw_score += duplicate_score
+    breakdown["duplicate_contribution"] = duplicate_score
 
-    score = min(score, 100)
+    # Cap final score
+    final_score = min(raw_score, 100)
 
-    # Risk level classification
-    if score <= 19:
+    # Adjust breakdown if overflow happened
+    if raw_score > 100:
+        overflow = raw_score - 100
+        breakdown["interaction_contribution"] = max(
+            breakdown["interaction_contribution"] - overflow, 0
+        )
+
+    # Determine risk level
+    if final_score <= 19:
         level = "Low"
-    elif score <= 49:
+    elif final_score <= 49:
         level = "Moderate"
-    elif score <= 79:
+    elif final_score <= 79:
         level = "High"
     else:
         level = "Critical"
 
     return {
-        "risk_score": score,
+        "risk_score": final_score,
         "risk_level": level,
-        "severity_breakdown": {
-            "high": high,
-            "moderate": moderate,
-            "low": low,
-            "duplicates": len(duplicates)
-        }
+        "breakdown": breakdown
     }
 
 
-def calculate_coverage(prescription):
-    total = len(prescription)
-    unknown = sum(1 for med in prescription if med.get("unknown", False))
+def calculate_coverage(mapped_medicines):
+    total = len(mapped_medicines)
+    unknown = len([m for m in mapped_medicines if m["unknown"]])
     recognized = total - unknown
 
     if total == 0:
         confidence = "none"
+        warning = "No medicines detected."
     elif unknown == 0:
         confidence = "complete"
-    elif recognized > 0:
-        confidence = "partial"
+        warning = None
     else:
-        confidence = "none"
+        confidence = "partial"
+        warning = "Some medicines were not recognized in the knowledge base."
 
     return {
         "total_medicines_detected": total,
         "recognized_medicines": recognized,
         "unknown_medicines": unknown,
         "analysis_confidence": confidence,
-        "coverage_warning": (
-            "Some medicines were not found in the current knowledge base. "
-            "Risk analysis may be incomplete."
-            if unknown > 0 else None
-        )
+        "coverage_warning": warning
     }

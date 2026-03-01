@@ -16,7 +16,6 @@ from services.explanation_engine import generate_explanations
 
 app = FastAPI(title="AI Prescription Safety Layer")
 
-# Allow frontend access (for local testing)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -34,42 +33,57 @@ def root():
     return {"message": "AI Prescription Safety Layer API is running."}
 
 
+def build_interaction_summary(interactions):
+    summary = {}
+
+    for interaction in interactions:
+        category = interaction["risk_category"]
+        severity = interaction["severity"]
+        weight = interaction["risk_weight"]
+
+        if category not in summary:
+            summary[category] = {
+                "total_interactions": 0,
+                "severity_distribution": {
+                    "high": 0,
+                    "moderate": 0,
+                    "low": 0
+                },
+                "total_contribution": 0
+            }
+
+        summary[category]["total_interactions"] += 1
+        summary[category]["severity_distribution"][severity] += 1
+        summary[category]["total_contribution"] += weight
+
+    return summary
+
+
 @app.post("/analyze")
 async def analyze_prescription(file: UploadFile = File(...)):
     try:
-        # 1. Save uploaded image temporarily
         file_path = os.path.join(UPLOAD_FOLDER, file.filename)
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        # 2. OCR Extraction
         raw_text = extract_text_from_image(file_path)
-
-        # 3. Parse Medicines
         parsed_medicines = extract_medicines(raw_text)
-
-        # 4. Map to Generics
         mapped_medicines = map_brands_to_generics(parsed_medicines)
 
-        # 5. Duplicate Detection
         duplicates = detect_duplicates(mapped_medicines)
-
-        # 6. Interaction Detection
         interactions = check_interactions(mapped_medicines)
-
-        # 7. Risk Calculation
         risk = calculate_risk(interactions, duplicates)
-
-        # 8. Coverage Intelligence
         coverage = calculate_coverage(mapped_medicines)
 
-        # 9. Explanation Layer
         explanations = generate_explanations(interactions)
+
+        interaction_summary = build_interaction_summary(interactions)
 
         return {
             "medicines": mapped_medicines,
             "duplicates": duplicates,
             "interactions": interactions,
+            "interaction_summary": interaction_summary,
             "risk": risk,
             "coverage": coverage,
             "explanations": explanations
