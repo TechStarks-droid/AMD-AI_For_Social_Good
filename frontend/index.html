@@ -2,41 +2,119 @@
 <html>
 <head>
     <title>Prescription Safety Analyzer</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 40px;
+            background: #f5f5f5;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
         }
 
         button {
-            padding: 8px 16px;
-            margin-top: 10px;
+            padding: 10px 18px;
+            margin-top: 15px;
+            background: #f15a24;
+            border: none;
+            color: white;
+            border-radius: 6px;
             cursor: pointer;
         }
 
-        .risk {
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 20px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
         }
 
-        .high { color: red; }
-        .moderate { color: orange; }
-        .low { color: green; }
-        .critical { color: darkred; }
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .risk-bar {
+            height: 20px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .risk-fill {
+            height: 100%;
+            background: linear-gradient(to right, green, orange, red);
+        }
+
+        .high { color: red; font-weight: bold; }
+        .moderate { color: orange; font-weight: bold; }
+        .low { color: green; font-weight: bold; }
+        .critical { color: darkred; font-weight: bold; }
+
     </style>
 </head>
+
 <body>
 
 <h2>AI Prescription Safety Layer</h2>
 
-<input type="file" id="imageInput" />
-<br>
-<button onclick="analyze()">Analyze Prescription</button>
+<!-- SCREEN 1 -->
+<div id="screen1" class="card">
+    <h3>Upload Prescription</h3>
+    <input type="file" id="imageInput" />
+    <br>
+    <button onclick="analyze()">Analyze</button>
+</div>
 
-<div id="output"></div>
+<!-- SCREEN 2 -->
+<div id="screen2" class="card hidden">
+    <h3>Extracted Medicines</h3>
+    <table id="medTable">
+        <thead>
+            <tr>
+                <th>Brand</th>
+                <th>Generic Composition</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button onclick="goToDashboard()">Analyze Risks</button>
+</div>
+
+<!-- SCREEN 3 -->
+<div id="screen3" class="card hidden">
+    <h3>Safety Analysis Dashboard</h3>
+
+    <h4>Overall Risk Score</h4>
+    <div class="risk-bar">
+        <div id="riskFill" class="risk-fill"></div>
+    </div>
+    <p id="riskText"></p>
+
+    <h4>Drug Interactions</h4>
+    <div id="interactions"></div>
+
+    <h4>Duplicate Compositions</h4>
+    <p id="duplicates"></p>
+
+    <h4>Explanation</h4>
+    <div id="explanations"></div>
+</div>
 
 <script>
+let globalData = null;
+
 async function analyze() {
     const fileInput = document.getElementById("imageInput");
     const file = fileInput.files[0];
@@ -49,56 +127,71 @@ async function analyze() {
     const formData = new FormData();
     formData.append("file", file);
 
-    try {
-        const response = await fetch("http://127.0.0.1:8000/analyze", {
-            method: "POST",
-            body: formData
-        });
-
-        const data = await response.json();
-        displayResult(data);
-    } catch (error) {
-        alert("Error connecting to backend.");
-        console.error(error);
-    }
-}
-
-function displayResult(data) {
-    const output = document.getElementById("output");
-    output.innerHTML = "";
-
-    // Risk
-    const riskDiv = document.createElement("div");
-    riskDiv.className = "risk " + data.risk.risk_level.toLowerCase();
-    riskDiv.innerText =
-        "Risk Score: " +
-        data.risk.risk_score +
-        " (" +
-        data.risk.risk_level +
-        ")";
-    output.appendChild(riskDiv);
-
-    // Medicines
-    const medsTitle = document.createElement("h3");
-    medsTitle.innerText = "Medicines";
-    output.appendChild(medsTitle);
-
-    data.medicines.forEach(med => {
-        const p = document.createElement("p");
-        p.innerText = med.brand + " → " + med.generics.join(", ");
-        output.appendChild(p);
+    const response = await fetch("http://127.0.0.1:8000/analyze", {
+        method: "POST",
+        body: formData
     });
 
-    // Interactions
-    if (data.explanations && data.explanations.length > 0) {
-        const interTitle = document.createElement("h3");
-        interTitle.innerText = "Interactions";
-        output.appendChild(interTitle);
+    const data = await response.json();
+    globalData = data;
 
-        data.explanations.forEach(exp => {
+    showMedicines(data);
+}
+
+function showMedicines(data) {
+    document.getElementById("screen1").classList.add("hidden");
+    document.getElementById("screen2").classList.remove("hidden");
+
+    const tableBody = document.querySelector("#medTable tbody");
+    tableBody.innerHTML = "";
+
+    data.medicines.forEach(med => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${med.brand}</td>
+            <td>${med.generics.join(", ")}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
+
+function goToDashboard() {
+    document.getElementById("screen2").classList.add("hidden");
+    document.getElementById("screen3").classList.remove("hidden");
+
+    const riskScore = globalData.risk.risk_score;
+    const riskLevel = globalData.risk.risk_level;
+
+    document.getElementById("riskFill").style.width = riskScore + "%";
+    document.getElementById("riskText").innerHTML =
+        "Score: " + riskScore + " (" + riskLevel + ")";
+
+    document.getElementById("riskText").className = riskLevel.toLowerCase();
+
+    const interactionsDiv = document.getElementById("interactions");
+    interactionsDiv.innerHTML = "";
+
+    if (globalData.explanations) {
+        globalData.explanations.forEach(exp => {
             const p = document.createElement("p");
             p.innerText = exp.simple_explanation;
-            output.appendChild(p);
+            interactionsDiv.appendChild(p);
+        });
+    }
+
+    document.getElementById("duplicates").innerText =
+        globalData.duplicates ? globalData.duplicates.length + " duplicates detected" : "0 duplicates detected";
+
+    const explanationDiv = document.getElementById("explanations");
+    explanationDiv.innerHTML = "";
+
+    if (globalData.explanations) {
+        globalData.explanations.forEach(exp => {
+            const p = document.createElement("p");
+            p.innerText = exp.simple_explanation;
+            explanationDiv.appendChild(p);
         });
     }
 }
